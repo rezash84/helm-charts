@@ -3,8 +3,8 @@ set -e
 
 lunaclient () {
     cp /thales/safenet/lunaclient/Chrystoki-template.conf /thales/safenet/lunaclient/config/Chrystoki.conf
-    export ChrystokiConfigurationPath=/thales/safenet/lunaclient/config
-    export NOW=$(date +%Y-%m-%d)
+    ChrystokiConfigurationPath=/thales/safenet/lunaclient/config
+    NOW=$(date +%Y-%m-%d)
     /thales/safenet/lunaclient/bin/64/configurator setValue -s Chrystoki2 -e LibUNIX -v /thales/safenet/lunaclient/libs/64/libCryptoki2.so
     /thales/safenet/lunaclient/bin/64/configurator setValue -s Chrystoki2 -e LibUNIX64 -v /thales/safenet/lunaclient/libs/64/libCryptoki2_64.so
     /thales/safenet/lunaclient/bin/64/configurator setValue -s Misc -e ToolsDir -v /thales/safenet/lunaclient/bin/64/

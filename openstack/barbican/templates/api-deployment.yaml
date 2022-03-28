@@ -126,6 +126,10 @@ spec:
           imagePullPolicy: IfNotPresent
           command: [ "/bin/bash", "-c", "--" ]
           args: [ "mv /usr/safenet /thales; while true; do sleep 30; done;" ]
+          lifecycle:
+            postStart:
+              exec:
+                command: [ "/bin/bash", "/scripts/barbican_lunaclient.sh" ]
           volumeMounts:
             - name: hsm
               mountPath: /scripts/barbican_lunaclient.sh
