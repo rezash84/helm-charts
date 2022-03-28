@@ -32,7 +32,7 @@ debug: "True"
 hsm:
   enabled: false
   luna:
-    image: lunaclientt
+    image: lunaclient
 
 statsd:
   port: 9102

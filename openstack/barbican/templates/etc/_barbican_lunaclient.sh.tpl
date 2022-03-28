@@ -2,14 +2,16 @@
 set -e
 
 lunaclient () {
+    NOW="$(date +%Y%m%d)"
     cp /thales/safenet/lunaclient/Chrystoki-template.conf /thales/safenet/lunaclient/config/Chrystoki.conf
-    ChrystokiConfigurationPath=/thales/safenet/lunaclient/config
-    NOW=$(date +%Y-%m-%d)
+    ln -s /thales/safenet/lunaclient/libs/64/libCryptoki2.so /usr/lib/libcrystoki2.so
     /thales/safenet/lunaclient/bin/64/configurator setValue -s Chrystoki2 -e LibUNIX -v /thales/safenet/lunaclient/libs/64/libCryptoki2.so
     /thales/safenet/lunaclient/bin/64/configurator setValue -s Chrystoki2 -e LibUNIX64 -v /thales/safenet/lunaclient/libs/64/libCryptoki2_64.so
     /thales/safenet/lunaclient/bin/64/configurator setValue -s Misc -e ToolsDir -v /thales/safenet/lunaclient/bin/64/
     /thales/safenet/lunaclient/bin/64/configurator setValue -s "LunaSA Client" -e SSLConfigFile -v /thales/safenet/lunaclient/openssl.cnf
     /thales/safenet/lunaclient/bin/64/configurator setValue -s "LunaSA Client" -e ServerCAFile -v /thales/safenet/lunaclient/config/certs/CAFile.pem
+    /thales/safenet/lunaclient/bin/64/configurator setValue -s "LunaSA Client" -e "ClientCertFile" -v /thales/safenet/lunaclient/config/certs/
+    /thales/safenet/lunaclient/bin/64/configurator setValue -s "LunaSA Client" -e "ClientPrivKeyFile" -v /thales/safenet/lunaclient/config/certs/
     /thales/safenet/lunaclient/bin/64/configurator setValue -s "Secure Trusted Channel" -e ClientTokenLib -v /thales/safenet/lunaclient/libs/64/libSoftToken.so
     /thales/safenet/lunaclient/bin/64/configurator setValue -s "Secure Trusted Channel" -e SoftTokenDir -v /thales/safenet/lunaclient/config/stc/token
     /thales/safenet/lunaclient/bin/64/configurator setValue -s "Secure Trusted Channel" -e ClientIdentitiesDir -v /thales/safenet/lunaclient/config/stc/client_identities
@@ -24,8 +26,7 @@ lunaclient () {
     /thales/safenet/lunaclient/bin/64/configurator setValue -s "HAConfiguration" -e HAOnly -v {{ .Values.lunaclient.HAConfiguration.HAOnly }}
     /thales/safenet/lunaclient/bin/64/configurator setValue -s "HAConfiguration" -e haLogPath -v {{ .Values.lunaclient.HAConfiguration.haLogPath }}
     /thales/safenet/lunaclient/bin/64/configurator setValue -s "HAConfiguration" -e logLen -v {{ .Values.lunaclient.HAConfiguration.logLen }}
-    ln -s /thales/safenet/lunaclient/libs/64/libCryptoki2.so /usr/lib/libcrystoki2.so
-    /thales/safenet/lunaclient/bin/64/vtl createCert -n $HOSTNAME-$NOW -C /thales/safenet/lunaclient/config/certs/$HOSTNAME-$NOW.pem -P /thales/safenet/lunaclient/config/certs/$HOSTNAME-$NOW.key.pem
+    /thales/safenet/lunaclient/bin/64/vtl createCert -n $HOSTNAME-$NOW
     /thales/safenet/lunaclient/bin/64/pscp -pw {{ .Values.lunaclient.conn.pwd }} /thales/safenet/lunaclient/config/certs/$HOSTNAME-$NOW.pem {{ .Values.lunaclient.conn.user }}@{{ .Values.lunaclient.conn.ip }}:.
     /thales/safenet/lunaclient/bin/64/pscp -pw {{ .Values.lunaclient.conn.pwd }} {{ .Values.lunaclient.conn.user }}@{{ .Values.lunaclient.conn.ip }}:server.pem /thales/safenet/lunaclient/config/certs/
     /thales/safenet/lunaclient/bin/64/vtl addserver -n {{ .Values.lunaclient.conn.ip }} -c  /thales/safenet/lunaclient/config/certs/server.pem
