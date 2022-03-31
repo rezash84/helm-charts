@@ -26,6 +26,10 @@ spec:
         app: {{ template "fullname" . }}
         component: "{{ .Values.postgresDatabase }}"
         type: database
+        {{- if .Values.alerts.enabled }}
+        alert-tier: {{ required ".Values.alerts.tier missing" .Values.alerts.tier }}
+        alert-service: {{ include "alerts.service" . }}
+        {{- end }}
       annotations:
         checksum/secrets: {{ include (print $.Template.BasePath  "/secrets.yaml") . | sha256sum }}
         checksum/etc: {{ include (print $.Template.BasePath  "/etc-configmap.yaml") . | sha256sum }}
@@ -137,7 +141,7 @@ spec:
             value: {{ .Values.global.region }}
 {{- end }}
           - name: OS_PASSWORD
-            value: {{.Values.backup.os_password | default .Values.global.dbBackupServicePassword | required "Please set Values.global.dbBackupServicePassword or .Values.backup.os_password" | quote}}
+            value: {{.Values.backup.os_password | required "Please set .Values.backup.os_password" | quote}}
           - name: BACKUP_PGSQL_FULL
             value: {{.Values.backup.interval_full | quote}}
         {{- if .Values.backup.resources.enabled }}

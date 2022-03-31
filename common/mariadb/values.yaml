@@ -11,6 +11,7 @@ max_connections: 1024
 buffer_pool_size: "1024M"
 performance_schema: "OFF"
 log_file_size: "256M"
+log_warnings: "2"
 query_cache_size: "0"
 query_cache_type: "0"
 join_buffer_size: "4M"
@@ -69,18 +70,6 @@ nodeAffinity: {}
 # set to true to use .Values.global.registryAlternateRegion instead of .Values.global.registry
 use_alternate_registry: false
 
-backup:
-  enabled: false
-  image: backup-tools
-  image_version: v0.6.5
-  interval_full: 1 days
-  interval_incr: 1 hours
-  os_password: DEFINED-IN-REGION-SECRETS
-  os_username: db_backup
-  os_user_domain: Default
-  os_project_name: master
-  os_project_domain: ccadmin
-
 readiness:
   image: pod-readiness
   image_version: 70f3884b
@@ -89,7 +78,7 @@ backup_v2:
   enabled: false
   backup_dir: "./backup"
   image: maria-back-me-up
-  image_version: "20211116094800"
+  image_version: "20220329113120"
   full_backup_cron_schedule: "0 0 * * *"
   incremental_backup_in_minutes: 5
   purge_binlog_after_minutes: 60
@@ -106,7 +95,8 @@ backup_v2:
   maria_db:
     version: "10.4.0"
   oauth:
-    enabled: true
+    middleware: false
+    sap_id: true
 
 
 metrics:

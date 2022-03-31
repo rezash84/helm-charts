@@ -20,7 +20,8 @@ data:
       backup_dir: {{ .Values.backup_v2.backup_dir }}
       enable_init_restore: {{ .Values.backup_v2.enable_init_restore }}
       oauth:
-        enabled: {{ default true .Values.backup_v2.oauth.enabled}}
+        middleware: {{ .Values.backup_v2.oauth.middleware}}
+        sap_id: {{ default false .Values.backup_v2.oauth.sap_id}}
         provider_url: "https://auth.mariabackup.{{ .Values.global.region }}.cloud.sap"
         redirect_url: "https://{{ .Values.name }}.mariabackup.{{ .Values.global.region }}.cloud.sap"
     database:
@@ -58,7 +59,7 @@ data:
           user_domain_name: Default
           project_name: master
           project_domain_name: ccadmin
-          password: {{ .Values.backup_v2.swift.password | default .Values.global.dbBackupServicePassword | required "Please set Values.global.dbBackupServicePassword or .Values.backup.os_password" | quote }}
+          password: {{ .Values.backup_v2.swift.password | default .Values.global.dbBackupServicePassword | required "Please set .Values.global.dbBackupServicePassword or .Values.backup_v2.swift.password" | quote }}
           region: {{ .Values.global.region }}
           container_name: "mariadb-backup-{{ .Values.global.region }}"
     verification:

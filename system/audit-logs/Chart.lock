@@ -1,7 +1,7 @@
 dependencies:
 - name: fluent-audit-container
   repository: file://vendor/fluent-audit-container
-  version: 2.0.33
+  version: 2.0.35
 - name: fluent-audit-systemd
   repository: file://vendor/fluent-audit-systemd
   version: 2.0.3
@@ -14,5 +14,5 @@ dependencies:
 - name: audit-poller
   repository: file://vendor/audit-poller
   version: 0.0.10
-digest: sha256:716d471205ce303febc5e4256c38a7c7c7ef2bf8c9cb2025fdd6b210900a87c5
-generated: "2022-03-22T14:45:31.713157+01:00"
+digest: sha256:de9606d3a2c8f8a5b23558b01fd73764b6ba111fb89f0382c36c4570ca5ccfda
+generated: "2022-03-28T10:32:24.616404+02:00"

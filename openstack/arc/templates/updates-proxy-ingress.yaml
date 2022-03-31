@@ -15,7 +15,7 @@ data:
   tls.key: {{ $ing.tlsKey | b64enc }}
 {{- end }}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-{{ $name | replace "." "-" }}
@@ -36,9 +36,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: arc-updates-proxy
-          servicePort: 80
+          service:
+            name: arc-updates-proxy
+            port:
+              number: 80
 {{- end }}
 {{- end }}
 {{- end }}
