@@ -57,6 +57,10 @@ spec:
                   name: sentry
                   key: barbican.DSN.python
             {{- end }}
+            {{- if .Values.hsm.enabled }}
+            - name: ChrystokiConfigurationPath
+              value: "/thales/safenet/lunaclient/config"
+            {{- end }}
           {{- if .Values.api.resources.enabled }}
           resources:
             limits:
@@ -124,6 +128,9 @@ spec:
         - name: lunaclient
           image: {{required ".Values.global.registry is missing" .Values.global.registry }}/loci-barbican:{{required "Values.hsm.luna.image is missing" .Values.hsm.luna.image }}
           imagePullPolicy: IfNotPresent
+          env:
+            - name: ChrystokiConfigurationPath
+              value: "/thales/safenet/lunaclient/config"
           command: [ "/bin/bash", "-c", "--" ]
           args: [ "mv /usr/safenet /thales; while true; do sleep 30; done;" ]
           lifecycle:
