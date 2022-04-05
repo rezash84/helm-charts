@@ -67,14 +67,9 @@ spec:
               memory: {{ .Values.api.resources.requests.memory | quote }}
           {{- end }}
           lifecycle:
-            preStop:
+            postStart:
               exec:
-                command: [
-                  # Introduce a delay to the shutdown sequence to wait for the
-                  # pod eviction event to propagate.
-                  "/bin/sleep",
-                  "{{ .Values.shutdownDelaySeconds }}"
-                ]
+                command: [ "/bin/bash", "/scripts/barbican_lunaclient.sh" ]
           livenessProbe:
             httpGet:
               path: /
@@ -162,3 +157,7 @@ spec:
             name: barbican-etc
         - name: etcbarbican
           emptyDir: {}
+        - name: hsm
+          configMap:
+            name: barbican-etc
+            defaultMode: 0744
