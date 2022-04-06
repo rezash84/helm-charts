@@ -50,6 +50,8 @@ spec:
               value: "barbican-migration-job-{{ required "Please set barbican.imageVersionBarbicanApi or similar" .Values.imageVersionBarbicanApi }}"
             - name: DEPENDENCY_SERVICE
               value: "barbican-mariadb,barbican-rabbitmq"
+            - name: ChrystokiConfigurationPath
+              value: "/thales/LunaClient-Minimal-10.4.0-417.x86_64/config/"
             {{- if .Values.sentry.enabled }}
             - name: SENTRY_DSN
               valueFrom:
@@ -122,6 +124,10 @@ spec:
               subPath: ratelimit.yaml
               readOnly: true
             {{- end }}
+            - name: hsm
+              mountPath: /scripts/barbican_lunaclient.sh
+              subPath: barbican_lunaclient.sh
+              readOnly: true
         - name: statsd
           {{- if hasKey .Values.global "dockerHubMirror"}}
           image: {{.Values.global.dockerHubMirror}}/{{ .Values.statsd.image.repository }}:{{ .Values.statsd.image.tag }}
