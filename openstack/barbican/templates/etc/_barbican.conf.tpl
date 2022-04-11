@@ -84,11 +84,18 @@ policy_file = /etc/barbican/policy.yaml
 
 {{- if .Values.hsm.enabled }}
 [secretstore]
+enable_multiple_secret_stores = True
+stores_lookup_suffix = software, pkcs11
 namespace = barbican.secretstore.plugin
-enabled_secretstore_plugins = store_crypto
 
-[crypto]
-enabled_crypto_plugins = p11_crypto
+[secretstore:software]
+secret_store_plugin = store_crypto
+crypto_plugin = simple_crypto
+global_default = True
+
+[secretstore:pkcs11]
+secret_store_plugin = store_crypto
+crypto_plugin = p11_crypto
 
 [p11_crypto_plugin]
 library_path = {{ .Values.lunaclient.conn.library_path }}
