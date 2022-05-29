@@ -60,10 +60,26 @@ function start_tempest_tests {
   openstack object create reports/{{ index (split "-" .Chart.Name)._0 }} /tmp/report.html --name $(echo $OS_REGION_NAME)-latest.html
   openstack object create reports/{{ index (split "-" .Chart.Name)._0 }} /tmp/report.json --name $(echo $OS_REGION_NAME)-$(echo $MYTIMESTAMP).json
   openstack object create reports/{{ index (split "-" .Chart.Name)._0 }} /tmp/report.json --name $(echo $OS_REGION_NAME)-latest.json
-
+  echo "Hello world"
   export SLACK_URL={{ (index .Values (print .Chart.Name | replace "-" "_")).tempest.slack_webhook_url }}
   echo $SLACK_URL
-
+  curl -X POST --data '{
+    "attachments": [
+      {
+        "color": "#36a64f",
+        "blocks": [
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "Workflow test test\n <https://objectstore-3.qa-de-1.cloud.sap/v1/AUTH_3af1c3304e3c494aa798767243b9e434/reports/barbican/qa-de-1-latest.html|HTML report>\n <https://objectstore-3.qa-de-1.cloud.sap/v1/AUTH_3af1c3304e3c494aa798767243b9e434/reports/barbican/qa-de-1-log-latest.tar.gz|Log files>\n If latest is not longer valid then <https://objectstore-3.qa-de-1.cloud.sap/v1/AUTH_3af1c3304e3c494aa798767243b9e434/reports/barbican/|check>\n"
+            }
+          }
+        ]
+      }
+    ]
+  }'
+  $SLACK_URL
 
 }
 
