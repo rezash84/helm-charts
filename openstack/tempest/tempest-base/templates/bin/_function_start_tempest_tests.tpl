@@ -61,7 +61,7 @@ function start_tempest_tests {
   openstack object create reports/{{ index (split "-" .Chart.Name)._0 }} /tmp/report.json --name $(echo $OS_REGION_NAME)-$(echo $MYTIMESTAMP).json
   openstack object create reports/{{ index (split "-" .Chart.Name)._0 }} /tmp/report.json --name $(echo $OS_REGION_NAME)-latest.json
 
-  export SLACK_URL={{ (index .Values (print .Chart.Name | replace "-" "_")).tempest.slack-webhook-url }}
+  export SLACK_URL={{ (index .Values (print .Chart.Name | replace "-" "_")).tempest.slack_webhook_url }}
   echo $SLACK_URL
 
 
