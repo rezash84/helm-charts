@@ -162,7 +162,9 @@ disable_user_account_days_inactive = {{ .Values.disable_user_account_days_inacti
 {{- end }}
 
 [oslo_messaging_notifications]
-{{- if .Values.rabbitmq.host }}
+{{- if and .Values.audit.central_service.user .Values.audit.central_service.password }}
+transport_url = rabbit://{{ .Values.audit.central_service.user }}:{{ .Values.audit.central_service.password | urlquery }}@{{ .Values.audit.central_service.host }}:{{ .Values.audit.central_service.port }}/
+{{- else if .Values.rabbitmq.host }}
 transport_url = rabbit://{{ .Values.rabbitmq.users.default.user | default "rabbitmq" }}:{{ .Values.rabbitmq.users.default.password }}@{{ .Values.rabbitmq.host }}:{{ .Values.rabbitmq.port | default 5672 }}
 {{ else }}
 transport_url = rabbit://{{ .Values.rabbitmq.users.default.user | default "rabbitmq" }}:{{ .Values.rabbitmq.users.default.password }}@{{ include "rabbitmq_host" . }}:{{ .Values.rabbitmq.port | default 5672 }}
