@@ -32,6 +32,13 @@ users:
   admin:
     user: admin
     password: null
+    tag: administrator
+
+configure:
+  image: "sapcc/unified-kubernetes-toolbox"
+  image_version: "20220613150453"
+  kubectl_version: 1.23
+
 
 persistence:
   enabled: false

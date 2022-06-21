@@ -22,8 +22,6 @@ spec:
     metadata:
       labels:
         app: {{ template "fullname" . }}
-      annotations:
-        checksum/container.init: {{ include (print $.Template.BasePath "/bin-configmap.yaml") . | sha256sum }}
     spec:
       affinity:
         nodeAffinity:
@@ -38,14 +36,16 @@ spec:
 {{- include "rabbitmq_maintenance_affinity" . }}
 {{- include "rabbitmq_node_reinstall_affinity" . }}
 {{- end }}
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
       containers:
       - name: rabbitmq
         image: "{{include "dockerHubMirror" .}}/{{ .Values.image }}:{{.Values.imageTag }}"
         imagePullPolicy: {{ default "IfNotPresent" .Values.imagePullPolicy | quote }}
         command:
-          - bash
-        args:
-          - /container.init/rabbitmq-start
+        - rabbitmq-server
         {{- if .Values.livenessProbe.enabled }}
         livenessProbe:
           exec:
@@ -78,8 +78,6 @@ spec:
         volumeMounts:
           - name: rabbitmq-persistent-storage
             mountPath: /var/lib/rabbitmq
-          - mountPath: /container.init
-            name: container-init
 {{- if .Values.metrics.enabled }}
       - name: metrics
         image: {{include "dockerHubMirror" .}}/{{ .Values.metrics.image }}:{{ .Values.metrics.imageTag }}
@@ -105,9 +103,6 @@ spec:
         - name: rabbitmq-persistent-storage
           emptyDir: {}
       {{- end }}
-        - name: container-init
-          configMap:
-            name: {{ template "fullname" . }}-bin
   {{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
   - metadata:
